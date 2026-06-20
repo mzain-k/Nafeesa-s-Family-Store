@@ -41,11 +41,11 @@ export function Footer() {
             <div className="mt-6 space-y-3">
               <div className="flex items-start gap-3 text-sm text-background/70">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
-                <span>Main Market, Your City, Pakistan</span>
+                <span>Nafeesa's Family Store, Archer Road, Quetta, Pakistan</span>
               </div>
               <div className="flex items-center gap-3 text-sm text-background/70">
                 <Phone className="h-4 w-4 shrink-0" />
-                <span>+92 300 1234567</span>
+                <span>+92 318 4749779</span>
               </div>
               <div className="flex items-center gap-3 text-sm text-background/70">
                 <Mail className="h-4 w-4 shrink-0" />

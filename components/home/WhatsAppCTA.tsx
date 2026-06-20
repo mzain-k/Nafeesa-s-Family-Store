@@ -29,19 +29,18 @@ export function WhatsAppCTA() {
               </a>
             </Button>
             <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
-            >
-              <a href="tel:+923001234567">
-                <Phone className="mr-2 h-5 w-5" />
-                Call Us
-              </a>
+                asChild
+                size="lg"
+                className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary"
+                >
+                <a href="tel:+923001234567">
+                    <Phone className="mr-2 h-5 w-5" />
+                    Call Us
+                </a>
             </Button>
           </div>
           <p className="mt-6 text-sm text-primary-foreground/60">
-            Available Mon-Sat, 9 AM - 9 PM
+            Available Everyday, 9 AM - 9 PM
           </p>
         </div>
       </div>
