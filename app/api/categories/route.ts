@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
   try {
     await connectDB();
     const body = await req.json();
-    const { name, image, icon, section, description } = body;
+    const { name, images, icon, section, description } = body;
 
     if (!name || !section) {
       return NextResponse.json(
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const category = await Category.create({ name, slug, image, icon, section, description });
+    const category = await Category.create({ name, slug, images, icon, section, description });
     return NextResponse.json({ success: true, data: category }, { status: 201 });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });

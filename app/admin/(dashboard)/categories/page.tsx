@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Plus, Trash2, X } from "lucide-react";
+import { Plus, Trash2, Pencil, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 
 interface Category {
   _id: string;
@@ -9,8 +10,26 @@ interface Category {
   slug: string;
   section: string;
   description?: string;
+  icon?: string;
+  images?: string[];
   productCount?: number;
 }
+
+type FormState = {
+  name: string;
+  section: string;
+  description: string;
+  icon: string;
+  images: string[];
+};
+
+const emptyForm: FormState = {
+  name: "",
+  section: "shopping-center",
+  description: "",
+  icon: "",
+  images: [],
+};
 
 export default function AdminCategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -18,11 +37,8 @@ export default function AdminCategoriesPage() {
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const [form, setForm] = useState({
-    name: "",
-    section: "shopping-center",
-    description: "",
-  });
+  const [editingSlug, setEditingSlug] = useState<string | null>(null);
+  const [form, setForm] = useState<FormState>(emptyForm);
 
   const load = async () => {
     setLoading(true);
@@ -41,6 +57,26 @@ export default function AdminCategoriesPage() {
     load();
   }, []);
 
+  const openCreate = () => {
+    setEditingSlug(null);
+    setError("");
+    setForm(emptyForm);
+    setOpen(true);
+  };
+
+  const openEdit = (c: Category) => {
+    setEditingSlug(c.slug);
+    setError("");
+    setForm({
+      name: c.name,
+      section: c.section,
+      description: c.description || "",
+      icon: c.icon || "",
+      images: c.images || [],
+    });
+    setOpen(true);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name) {
@@ -50,14 +86,15 @@ export default function AdminCategoriesPage() {
     setSaving(true);
     setError("");
     try {
-      const res = await fetch("/api/categories", {
-        method: "POST",
+      const url = editingSlug ? `/api/categories/${editingSlug}` : "/api/categories";
+      const method = editingSlug ? "PUT" : "POST";
+      const res = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed");
-      setForm({ name: "", section: "shopping-center", description: "" });
       setOpen(false);
       load();
     } catch (err: any) {
@@ -86,7 +123,7 @@ export default function AdminCategoriesPage() {
           <h1 className="font-serif text-2xl font-bold text-foreground sm:text-3xl">Categories</h1>
           <p className="mt-1 text-sm text-muted-foreground">Organize your store with categories</p>
         </div>
-        <Button onClick={() => setOpen(true)}>
+        <Button onClick={openCreate}>
           <Plus className="mr-2 h-4 w-4" /> New category
         </Button>
       </div>
@@ -106,7 +143,7 @@ export default function AdminCategoriesPage() {
             <table className="w-full">
               <thead className="bg-secondary/40 text-left text-xs uppercase tracking-wider text-muted-foreground">
                 <tr>
-                  <th className="px-6 py-3">Name</th>
+                  <th className="px-6 py-3">Category</th>
                   <th className="px-6 py-3">Section</th>
                   <th className="px-6 py-3 text-right">Actions</th>
                 </tr>
@@ -114,18 +151,34 @@ export default function AdminCategoriesPage() {
               <tbody className="divide-y divide-border text-sm">
                 {categories.map((c) => (
                   <tr key={c._id} className="hover:bg-secondary/30">
-                    <td className="px-6 py-3 font-medium text-foreground">{c.name}</td>
+                    <td className="px-6 py-3">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg bg-secondary text-xl">
+                          {c.images && c.images.length > 0 ? (
+                            <img src={c.images[0]} alt={c.name} className="h-full w-full object-cover" />
+                          ) : (
+                            c.icon || "📂"
+                          )}
+                        </div>
+                        <span className="font-medium text-foreground">{c.name}</span>
+                      </div>
+                    </td>
                     <td className="px-6 py-3 text-muted-foreground">
                       {c.section === "shopping-center" ? "Shopping Center" : "Stationery"}
                     </td>
                     <td className="px-6 py-3 text-right">
-                      <button
-                        onClick={() => handleDelete(c.slug)}
-                        className="rounded-lg p-2 text-destructive hover:bg-destructive/10"
-                        aria-label="Delete"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
+                      <div className="inline-flex gap-1">
+                        <button onClick={() => openEdit(c)} className="rounded-lg p-2 hover:bg-secondary" aria-label="Edit">
+                          <Pencil className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(c.slug)}
+                          className="rounded-lg p-2 text-destructive hover:bg-destructive/10"
+                          aria-label="Delete"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -137,9 +190,11 @@ export default function AdminCategoriesPage() {
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-2xl bg-card p-6 shadow-xl">
+          <div className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl bg-card p-6 shadow-xl">
             <div className="flex items-center justify-between">
-              <h3 className="font-serif text-lg font-bold text-foreground">New Category</h3>
+              <h3 className="font-serif text-lg font-bold text-foreground">
+                {editingSlug ? "Edit category" : "New category"}
+              </h3>
               <button onClick={() => setOpen(false)} className="rounded-lg p-1 hover:bg-secondary">
                 <X className="h-5 w-5" />
               </button>
@@ -154,6 +209,7 @@ export default function AdminCategoriesPage() {
                   className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                 />
               </div>
+
               <div className="space-y-2">
                 <label className="text-sm font-medium text-foreground">Section</label>
                 <select
@@ -165,6 +221,7 @@ export default function AdminCategoriesPage() {
                   <option value="stationery">Stationery</option>
                 </select>
               </div>
+
               <div className="space-y-2">
                 <label className="text-sm font-medium text-foreground">Description</label>
                 <textarea
@@ -175,13 +232,31 @@ export default function AdminCategoriesPage() {
                   className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                 />
               </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground">Fallback Emoji</label>
+                <input
+                  value={form.icon}
+                  onChange={(e) => setForm({ ...form, icon: e.target.value })}
+                  placeholder="📚"
+                  maxLength={10}
+                  className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                />
+                <p className="text-xs text-muted-foreground">Shown only if no photo is uploaded.</p>
+              </div>
+
+              <ImageUploader
+                images={form.images}
+                onChange={(images) => setForm({ ...form, images })}
+              />
+
               {error && <p className="text-sm text-destructive">{error}</p>}
               <div className="flex justify-end gap-2 pt-2">
                 <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                   Cancel
                 </Button>
                 <Button type="submit" disabled={saving}>
-                  {saving ? "Saving…" : "Create"}
+                  {saving ? "Saving…" : editingSlug ? "Save changes" : "Create category"}
                 </Button>
               </div>
             </form>

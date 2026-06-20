@@ -1,38 +1,24 @@
 import Link from "next/link";
-import { Pencil, BookOpen, Sparkles, Home } from "lucide-react";
+import { Tag } from "lucide-react";
+import { connectDB } from "@/lib/db";
+import Category from "@/models/Category";
+import Product from "@/models/Product";
 
-const categories = [
-  {
-    name: "Stationery",
-    description: "Pens, notebooks, art supplies & more",
-    icon: Pencil,
-    count: "120+ items",
-    href: "/categories?section=stationery",
-  },
-  {
-    name: "Books",
-    description: "Educational, fiction & children books",
-    icon: BookOpen,
-    count: "200+ items",
-    href: "/categories?section=stationery",
-  },
-  {
-    name: "Cosmetics",
-    description: "Beauty products & personal care",
-    icon: Sparkles,
-    count: "80+ items",
-    href: "/categories?section=shopping-center",
-  },
-  {
-    name: "House Items",
-    description: "Kitchen, storage & home essentials",
-    icon: Home,
-    count: "100+ items",
-    href: "/categories?section=shopping-center",
-  },
-];
+async function getCategories() {
+  await connectDB();
+  const cats = await Category.find().sort({ createdAt: -1 }).limit(8).lean();
+  const withCounts = await Promise.all(
+    cats.map(async (c: any) => {
+      const productCount = await Product.countDocuments({ category: c._id });
+      return { ...c, productCount };
+    })
+  );
+  return JSON.parse(JSON.stringify(withCounts));
+}
 
-export function CategoriesSection() {
+export async function CategoriesSection() {
+  const categories = await getCategories();
+
   return (
     <section className="bg-secondary/30 py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -49,27 +35,51 @@ export function CategoriesSection() {
           </p>
         </div>
 
-        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {categories.map((c) => (
-            <Link
-              key={c.name}
-              href={c.href}
-              className="group relative overflow-hidden rounded-2xl bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
-            >
-              <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                <c.icon className="h-7 w-7" />
-              </div>
-              <h3 className="text-lg font-semibold text-foreground">{c.name}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{c.description}</p>
-              <div className="mt-4 flex items-center justify-between">
-                <span className="text-xs font-medium text-primary">{c.count}</span>
-                <span className="text-xs font-medium text-muted-foreground transition-colors group-hover:text-primary">
-                  Browse →
-                </span>
-              </div>
-              <div className="absolute -right-12 -top-12 h-24 w-24 rounded-full bg-primary/5 transition-all group-hover:bg-primary/10" />
-            </Link>
-          ))}
+        <div className="mt-16">
+          {categories.length === 0 ? (
+            <div className="rounded-2xl bg-card py-16 text-center">
+              <div className="text-5xl">📂</div>
+              <h3 className="mt-3 font-serif text-xl font-semibold text-foreground">
+                No categories yet
+              </h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Categories will appear here once added via the admin panel.
+              </p>
+            </div>
+          ) : (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {categories.map((c: any) => (
+                <Link
+                  key={c._id}
+                  href={`/category/${c.slug}`}
+                  className="group relative overflow-hidden rounded-2xl bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+                >
+                  <div className="mb-4 inline-flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                    {c.images && c.images.length > 0 ? (
+                      <img src={c.images[0]} alt={c.name} className="h-full w-full object-cover" />
+                    ) : c.icon ? (
+                      <span className="text-2xl">{c.icon}</span>
+                    ) : (
+                      <Tag className="h-7 w-7" />
+                    )}
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground">{c.name}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
+                    {c.description || "Explore our selection"}
+                  </p>
+                  <div className="mt-4 flex items-center justify-between">
+                    <span className="text-xs font-medium text-primary">
+                      {c.productCount ?? 0} {c.productCount === 1 ? "item" : "items"}
+                    </span>
+                    <span className="text-xs font-medium text-muted-foreground transition-colors group-hover:text-primary">
+                      Browse →
+                    </span>
+                  </div>
+                  <div className="absolute -right-12 -top-12 h-24 w-24 rounded-full bg-primary/5 transition-all group-hover:bg-primary/10" />
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>

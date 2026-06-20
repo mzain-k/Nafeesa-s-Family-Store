@@ -4,7 +4,7 @@ const CategorySchema = new Schema(
   {
     name: { type: String, required: true, trim: true },
     slug: { type: String, required: true, unique: true, lowercase: true, index: true },
-    image: { type: String, default: "" },
+    images: [{ type: String }],
     icon: { type: String, default: "" },
     description: { type: String, default: "" },
     section: {

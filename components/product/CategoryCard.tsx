@@ -6,6 +6,8 @@ interface Category {
   name: string;
   slug: string;
   description?: string;
+  icon?: string;
+  images?: string[];
   productCount?: number;
 }
 
@@ -15,8 +17,14 @@ export function CategoryCard({ category }: { category: Category }) {
       href={`/category/${category.slug}`}
       className="group relative overflow-hidden rounded-2xl bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
     >
-      <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-        <Tag className="h-7 w-7" />
+      <div className="mb-4 inline-flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+        {category.images && category.images.length > 0 ? (
+          <img src={category.images[0]} alt={category.name} className="h-full w-full object-cover" />
+        ) : category.icon ? (
+          <span className="text-2xl">{category.icon}</span>
+        ) : (
+          <Tag className="h-7 w-7" />
+        )}
       </div>
       <h3 className="text-lg font-semibold text-foreground">{category.name}</h3>
       <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
