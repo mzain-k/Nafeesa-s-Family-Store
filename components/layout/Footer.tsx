@@ -26,12 +26,12 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-4">
           <div className="lg:col-span-1">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary">
-                <span className="text-xl font-bold text-primary-foreground">N</span>
+            <Link href="/" className="flex items-center gap-3">
+              <div className="h-12 w-12 shrink-0 overflow-hidden rounded-full">
+                <img src="/logo.png" alt="Nafeesa Family Store" className="h-full w-full object-cover" />
               </div>
-              <span className="font-serif text-2xl font-semibold text-background">
-                Nafeesa
+              <span className="font-serif text-xl font-semibold leading-tight text-background sm:text-2xl">
+                Nafeesa Family Store
               </span>
             </Link>
             <p className="mt-4 text-sm text-background/70">
