@@ -23,7 +23,10 @@ export function WhatsAppCTA() {
               size="lg"
               className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
             >
-              <a href="https://wa.me/923001234567" target="_blank" rel="noopener noreferrer">
+              <a   href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <MessageCircle className="mr-2 h-5 w-5" />
                 Chat on WhatsApp
               </a>
@@ -33,9 +36,9 @@ export function WhatsAppCTA() {
                 size="lg"
                 className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary"
                 >
-                <a href="tel:+923001234567">
-                    <Phone className="mr-2 h-5 w-5" />
-                    Call Us
+                <a href={`tel:${process.env.NEXT_PUBLIC_PHONE_NUMBER}`}>
+                  <Phone className="mr-2 h-5 w-5" />
+                  Call Us
                 </a>
             </Button>
           </div>

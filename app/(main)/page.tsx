@@ -1,3 +1,5 @@
+export const revalidate = 0;
+
 import { HeroSection } from "@/components/home/HeroSection";
 import { CategoriesSection } from "@/components/home/CategoriesSection";
 import { ProductsSection } from "@/components/home/ProductsSection";

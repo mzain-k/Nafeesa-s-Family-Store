@@ -80,7 +80,6 @@ export function ImageUploader({ images, onChange }: Props) {
         type="file"
         accept="image/*"
         multiple
-        capture="environment"
         onChange={(e) => handleFiles(e.target.files)}
         className="hidden"
       />

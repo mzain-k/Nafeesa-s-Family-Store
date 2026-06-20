@@ -1,3 +1,5 @@
+export const revalidate = 0;
+
 import Link from "next/link";
 import { Tag } from "lucide-react";
 import { connectDB } from "@/lib/db";
