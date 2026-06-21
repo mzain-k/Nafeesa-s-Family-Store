@@ -44,7 +44,7 @@ export function Footer() {
               </div>
               <div className="flex items-center gap-3 text-sm text-background/70">
                 <Phone className="h-4 w-4 shrink-0" />
-                <span>+92 318 4749779</span>
+                <span>+92 334 2797314</span>
               </div>
               <div className="flex items-center gap-3 text-sm text-background/70">
                 <Mail className="h-4 w-4 shrink-0" />
@@ -98,6 +98,8 @@ export function Footer() {
             </p>
             <p className="mt-1 text-xs text-background/30">
               Built by Muhammad Zain Khan
+              Phone: +92 3184749779
+              Email: mzaink.22@gmail.com
             </p>
           </div>
           <div className="flex gap-4">
