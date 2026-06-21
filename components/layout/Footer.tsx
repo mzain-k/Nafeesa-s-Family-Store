@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { MapPin, Phone, Mail } from "lucide-react";
-import { SiFacebook, SiInstagram, SiX } from "@icons-pack/react-simple-icons";
+import { SiInstagram, SiWhatsapp } from "@icons-pack/react-simple-icons";
 
 const footerLinks = {
   shop: [
@@ -15,9 +15,8 @@ const footerLinks = {
 };
 
 const socialLinks = [
-  { name: "Facebook", icon: SiFacebook, href: "#" },
-  { name: "Instagram", icon: SiInstagram, href: "#" },
-  { name: "Twitter", icon: SiX, href: "#" },
+  { name: "Instagram", icon: SiInstagram, href: "https://www.instagram.com/nafeesas_the_family_store/" },
+  { name: "WhatsApp Channel", icon: SiWhatsapp, href: "https://whatsapp.com/channel/0029Vb7ojzKGehEH3XjJlT42" },
 ];
 
 export function Footer() {
@@ -92,15 +91,22 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-background/10 pt-8 sm:flex-row">
-          <p className="text-sm text-background/50">
-            © {new Date().getFullYear()} Nafeesa Family Store. All rights reserved.
-          </p>
+        <div className="mt-12 flex flex-col items-center justify-between gap-2 border-t border-background/10 pt-8 sm:flex-row">
+          <div className="text-center sm:text-left">
+            <p className="text-sm text-background/50">
+              © {new Date().getFullYear()} Nafeesa Family Store. All rights reserved.
+            </p>
+            <p className="mt-1 text-xs text-background/30">
+              Built by Muhammad Zain Khan
+            </p>
+          </div>
           <div className="flex gap-4">
             {socialLinks.map((social) => (
               <a
                 key={social.name}
                 href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-background/10 text-background/70 transition-colors hover:bg-primary hover:text-primary-foreground"
                 aria-label={social.name}
               >
