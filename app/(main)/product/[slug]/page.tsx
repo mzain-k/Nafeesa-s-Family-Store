@@ -7,7 +7,7 @@ import { MessageCircle, Phone, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductGallery } from "@/components/product/ProductGallery";
 import { ProductCard } from "@/components/product/ProductCard";
-import { AddToCartButton } from "@/components/cart/AddToCartButton.tsx";
+import { AddToCartButton } from "@/components/cart/AddToCartButton";
 
 function formatPrice(price?: number): string {
   if (!price || price === 0) return "Contact for price";
