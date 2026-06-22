@@ -14,15 +14,17 @@ export const metadata: Metadata = {
     "Your trusted family store for stationery, books, cosmetics, and house items.",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+import { CartProvider } from "@/lib/cart-context";
+import { FloatingCartButton } from "@/components/cart/FloatingCartButton";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${geist.variable} ${playfair.variable} bg-background`}>
       <body className="font-sans antialiased min-h-screen flex flex-col">
-        {children}
+        <CartProvider>
+          {children}
+          <FloatingCartButton />
+        </CartProvider>
       </body>
     </html>
   );

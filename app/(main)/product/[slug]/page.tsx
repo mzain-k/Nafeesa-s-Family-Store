@@ -7,6 +7,7 @@ import { MessageCircle, Phone, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductGallery } from "@/components/product/ProductGallery";
 import { ProductCard } from "@/components/product/ProductCard";
+import { AddToCartButton } from "@/components/cart/AddToCartButton.tsx";
 
 function formatPrice(price?: number): string {
   if (!price || price === 0) return "Contact for price";
@@ -106,19 +107,22 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </p>
           </div>
 
-          <div className="mt-8 grid gap-3 sm:grid-cols-2">
-            <Button asChild size="lg">
-              <a href={getWhatsAppLink(product.name)} target="_blank" rel="noopener noreferrer">
-                <MessageCircle className="mr-2 h-5 w-5" />
-                Order on WhatsApp
-              </a>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="border-primary/20 hover:bg-primary/5">
-              <a href={getCallLink()}>
-                <Phone className="mr-2 h-5 w-5" />
-                Call to inquire
-              </a>
-            </Button>
+          <div className="mt-8 space-y-3">
+            <AddToCartButton product={product} />
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Button asChild size="lg">
+                <a href={getWhatsAppLink(product.name)} target="_blank" rel="noopener noreferrer">
+                  <MessageCircle className="mr-2 h-5 w-5" />
+                  Order on WhatsApp
+                </a>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="border-primary/20 hover:bg-primary/5">
+                <a href={getCallLink()}>
+                  <Phone className="mr-2 h-5 w-5" />
+                  Call to inquire
+                </a>
+              </Button>
+            </div>
           </div>
 
           <div className="mt-8 grid grid-cols-2 gap-3">
